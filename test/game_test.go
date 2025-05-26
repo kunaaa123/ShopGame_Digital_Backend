@@ -12,7 +12,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// Mock Repository
 type mockGameRepository struct {
 	games map[uint]domain.Game
 }
@@ -61,12 +60,10 @@ func (m *mockGameRepository) Delete(id uint) error {
 	return nil
 }
 
-// Test Cases
 func TestGameService_GetAll(t *testing.T) {
 	repo := newMockGameRepository()
 	service := service.NewgameService(repo)
 
-	// Create test data
 	testGame := domain.Game{
 		Name:        "Test Game",
 		Description: "Test Description",
@@ -75,7 +72,6 @@ func TestGameService_GetAll(t *testing.T) {
 	}
 	repo.Create(&testGame)
 
-	// Test
 	games, err := service.GetAll()
 
 	assert.NoError(t, err)
@@ -87,7 +83,6 @@ func TestGameService_GetByID(t *testing.T) {
 	repo := newMockGameRepository()
 	service := service.NewgameService(repo)
 
-	// Create test data
 	testGame := domain.Game{
 		Name:        "Test Game",
 		Description: "Test Description",
@@ -96,12 +91,10 @@ func TestGameService_GetByID(t *testing.T) {
 	}
 	repo.Create(&testGame)
 
-	// Test existing game
 	game, err := service.GetByID(int(testGame.ID))
 	assert.NoError(t, err)
 	assert.Equal(t, testGame.Name, game.Name)
 
-	// Test non-existing game
 	_, err = service.GetByID(999)
 	assert.Error(t, err)
 }
@@ -127,7 +120,6 @@ func TestGameService_Update(t *testing.T) {
 	repo := newMockGameRepository()
 	service := service.NewgameService(repo)
 
-	// Create initial game
 	testGame := domain.Game{
 		Name:        "Test Game",
 		Description: "Test Description",
@@ -136,7 +128,6 @@ func TestGameService_Update(t *testing.T) {
 	}
 	repo.Create(&testGame)
 
-	// Update game
 	updatedGame := domain.Game{
 		Name:        "Updated Game",
 		Description: "Updated Description",
@@ -148,7 +139,6 @@ func TestGameService_Update(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, updatedGame.Name, result.Name)
 
-	// Test updating non-existing game
 	_, err = service.Update(999, updatedGame)
 	assert.Error(t, err)
 }
@@ -157,7 +147,6 @@ func TestGameService_Delete(t *testing.T) {
 	repo := newMockGameRepository()
 	service := service.NewgameService(repo)
 
-	// Create test data
 	testGame := domain.Game{
 		Name:        "Test Game",
 		Description: "Test Description",
@@ -166,11 +155,9 @@ func TestGameService_Delete(t *testing.T) {
 	}
 	repo.Create(&testGame)
 
-	// Test deleting existing game
 	err := service.Delete(int(testGame.ID))
 	assert.NoError(t, err)
 
-	// Test deleting non-existing game
 	err = service.Delete(999)
 	assert.Error(t, err)
 }
@@ -242,7 +229,6 @@ func TestGameService_GetAllPerformance(t *testing.T) {
 	repo := newMockGameRepository()
 	service := service.NewgameService(repo)
 
-	// Create 1000 test games
 	for i := 0; i < 1000; i++ {
 		game := domain.Game{
 			Name:        fmt.Sprintf("Game %d", i),
@@ -259,14 +245,13 @@ func TestGameService_GetAllPerformance(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Len(t, games, 1000)
-	assert.Less(t, duration, 2*time.Second) // ควรใช้เวลาไม่เกิน 2 วินาที
+	assert.Less(t, duration, 2*time.Second)
 }
 
 func TestGameService_ConcurrentAccess(t *testing.T) {
 	repo := newMockGameRepository()
 	service := service.NewgameService(repo)
 
-	// Create initial game
 	testGame := domain.Game{
 		Name:        "Test Game",
 		Description: "Test Description",
