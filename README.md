@@ -49,7 +49,7 @@ git clone https://github.com/kunaaa123/ShopGame_Digital_Backend
 
 2. เข้าไปที่โฟลเดอร์โปรเจค:
 ```bash
-cd ShopGame
+cd ShopGame_Digital_Backend
 ```
 
 3. ติดตั้ง dependencies:
